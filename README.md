@@ -1,4 +1,4 @@
-# ocluso
+# ![ocluso](https://raw.githubusercontent.com/ocluso/logo/master/svg/ocluso-color-full.svg)
 A modular management software for clubs
 
 ## Copyright
