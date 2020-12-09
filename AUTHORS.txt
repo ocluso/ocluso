@@ -1,0 +1,9 @@
+The ocluso Authors
+==================
+
+Maintainers
+-----------
+(In the order of their GitHub usernames)
+
+- Lucas Hinderberger (@lhinderberger)
+- Patrick Bahrmann (@pb11pb)
