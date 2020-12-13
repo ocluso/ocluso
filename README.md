@@ -1,5 +1,18 @@
-# ![ocluso](https://raw.githubusercontent.com/ocluso/logo/master/svg/ocluso-color-full.svg)
+# ![ocluso](logo/svg/ocluso-color-full.svg)
 A modular management software for clubs
+
+## Usage
+To compile ocluso, run
+
+```
+make
+```
+
+To compile and run ocluso, run
+
+```
+make run
+```
 
 ## Copyright
 ocluso is (C) 2020 The ocluso Authors (see AUTHORS.txt)

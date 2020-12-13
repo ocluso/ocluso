@@ -1,0 +1,3 @@
+[submodule "logo"]
+	path = logo
+	url = https://github.com/ocluso/logo
