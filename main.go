@@ -20,21 +20,37 @@ package main
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/ocluso/ocluso/internal/gateway"
+	"github.com/ocluso/ocluso/pkg/moduleindex"
 )
 
 func main() {
+	printLoadedModules()
+
 	moduleGateway := gateway.NewGateway()
 
 	//TODO: Auto-detect module names or load from configuration file
-	moduleGateway.AddModule("calendar")
-	moduleGateway.AddModule("fees")
-	moduleGateway.AddModule("mailinglists")
-	moduleGateway.AddModule("members")
+	//moduleGateway.AddModule("calendar")
+	//moduleGateway.AddModule("fees")
+	//moduleGateway.AddModule("mailinglists")
+	//moduleGateway.AddModule("members")
 
-	http.Handle("/", http.FileServer(http.Dir("frontend"))) //TODO: Compile frontend into backend
-	http.Handle("/api/", &moduleGateway)
+	mux := http.NewServeMux()
+	mux.Handle("/", http.FileServer(http.Dir("frontend"))) //TODO: Compile frontend into backend
+	mux.Handle("/api/", http.StripPrefix("/api", &moduleGateway))
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", mux))
+}
+
+func printLoadedModules() {
+	moduleNames := make([]string, len(moduleindex.Modules))
+	i := 0
+	for name := range moduleindex.Modules {
+		moduleNames[i] = name
+		i++
+	}
+
+	log.Println("Loaded Modules:", strings.Join(moduleNames, ", "))
 }

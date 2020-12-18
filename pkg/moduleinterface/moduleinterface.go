@@ -20,11 +20,17 @@ package moduleinterface
 import "net/http"
 
 type Module interface {
-	GetRequestHandler() http.Handler
+	Info() *ModuleInfo //TODO: Possibility of using an immutable view?
+	Name() string
+	NewRequestHandler() http.Handler
 }
 
-type ModuleContext interface {
+type ModuleContext struct {
 	//TODO
+}
+
+type ModuleInfo struct {
+	DisplayName map[string]string
 }
 
 type ModuleFactory func(context ModuleContext) (Module, error)

@@ -14,14 +14,17 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-build: frontend
+build: build_dirs moduleindex frontend
 	go build -o build/ocluso main.go 
 
 build_dirs:
 	mkdir -p build/frontend
 
-frontend: build_dirs
+frontend: build_dirs moduleindex
 	echo "Hello World from frontend!" > build/frontend/index.html
+
+moduleindex:
+	go run tools/gen-moduleindex/gen-moduleindex.go
 
 clean:
 	rm -r build

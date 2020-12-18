@@ -15,29 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package gateway
+package moduleindex
 
 import (
-	"net/http"
-
 	"github.com/ocluso/ocluso/pkg/moduleinterface"
 )
 
-type Gateway struct {
-	mux *http.ServeMux
-}
-
-func NewGateway() Gateway {
-	return Gateway{
-		mux: http.NewServeMux(),
-	}
-}
-
-func (g *Gateway) AddModule(module moduleinterface.Module) {
-	prefix := "/" + module.Name()
-	g.mux.Handle(prefix, http.StripPrefix(prefix, module.NewRequestHandler()))
-}
-
-func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	g.mux.ServeHTTP(w, r)
+type ModuleIndexEntry struct {
+	info    moduleinterface.ModuleInfo
+	factory moduleinterface.ModuleFactory
 }
