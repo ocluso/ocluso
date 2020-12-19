@@ -23,10 +23,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/ocluso/ocluso/pkg/moduleinterface"
+	"ocluso/pkg/moduleinterface"
 )
 
-const basePackage = "github.com/ocluso/ocluso"
+const basePackage = "ocluso"
 
 func handleError(e error) {
 	if e != nil {

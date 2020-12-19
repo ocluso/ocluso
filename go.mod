@@ -1,3 +1,3 @@
-module github.com/ocluso/ocluso
+module ocluso
 
 go 1.15

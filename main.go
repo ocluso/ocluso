@@ -22,8 +22,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/ocluso/ocluso/internal/gateway"
-	"github.com/ocluso/ocluso/pkg/moduleindex"
+	"ocluso/internal/gateway"
+	"ocluso/pkg/moduleindex"
 )
 
 func main() {

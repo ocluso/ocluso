@@ -18,7 +18,7 @@
 package moduleindex
 
 import (
-	"github.com/ocluso/ocluso/pkg/moduleinterface"
+	"ocluso/pkg/moduleinterface"
 )
 
 type ModuleIndexEntry struct {

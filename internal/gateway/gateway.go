@@ -20,7 +20,7 @@ package gateway
 import (
 	"net/http"
 
-	"github.com/ocluso/ocluso/pkg/moduleinterface"
+	"ocluso/pkg/moduleinterface"
 )
 
 type Gateway struct {

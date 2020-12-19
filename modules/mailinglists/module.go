@@ -1,6 +1,6 @@
 package mailinglists
 
-import "github.com/ocluso/ocluso/pkg/moduleinterface"
+import "ocluso/pkg/moduleinterface"
 
 func BuildModule(context moduleinterface.ModuleContext) (moduleinterface.Module, error) {
 	panic("not implemented")
