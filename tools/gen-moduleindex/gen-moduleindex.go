@@ -77,12 +77,12 @@ func main() {
 		fmt.Fprintln(f, "import \""+basePackage+"/modules/"+name+"\"")
 	}
 
-	fmt.Fprintln(f, "\nvar Modules = map[string]ModuleIndexEntry{")
+	fmt.Fprintln(f, "\nvar LoadedModules = map[string]ModuleIndexEntry{")
 
 	for _, name := range moduleNames {
 		moduleInfo := readModuleInfo(name)
 		moduleInfoSrc := moduleInfoToSrc(&moduleInfo)
-		fmt.Fprintln(f, "    \""+name+"\": ModuleIndexEntry{ info: "+moduleInfoSrc+", factory: "+name+".BuildModule },")
+		fmt.Fprintln(f, "    \""+name+"\": ModuleIndexEntry{ Info: "+moduleInfoSrc+", Factory: "+name+".BuildModule },")
 	}
 
 	fmt.Fprintln(f, "}")

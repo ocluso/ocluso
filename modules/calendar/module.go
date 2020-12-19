@@ -1,7 +1,20 @@
 package calendar
 
-import "ocluso/pkg/moduleinterface"
+import (
+	"net/http"
+	"ocluso/pkg/moduleinterface"
+)
+
+type Module struct{}
 
 func BuildModule(context moduleinterface.ModuleContext) (moduleinterface.Module, error) {
-	panic("not implemented")
+	return &Module{}, nil
+}
+
+func (m *Module) Name() string {
+	return "calendar"
+}
+
+func (m *Module) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello World from calendar!"))
 }

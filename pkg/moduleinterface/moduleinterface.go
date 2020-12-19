@@ -20,9 +20,9 @@ package moduleinterface
 import "net/http"
 
 type Module interface {
-	Info() *ModuleInfo //TODO: Possibility of using an immutable view?
+	//TODO: Either re-enable or delete: Info() *ModuleInfo //TODO: Possibility of using an immutable view?
 	Name() string
-	NewRequestHandler() http.Handler
+	http.Handler
 }
 
 type ModuleContext struct {

@@ -24,6 +24,7 @@ import (
 
 	"ocluso/internal/gateway"
 	"ocluso/pkg/moduleindex"
+	"ocluso/pkg/moduleinterface"
 )
 
 func main() {
@@ -31,11 +32,15 @@ func main() {
 
 	moduleGateway := gateway.NewGateway()
 
-	//TODO: Auto-detect module names or load from configuration file
-	//moduleGateway.AddModule("calendar")
-	//moduleGateway.AddModule("fees")
-	//moduleGateway.AddModule("mailinglists")
-	//moduleGateway.AddModule("members")
+	for _, loadedModule := range moduleindex.LoadedModules {
+		context := moduleinterface.ModuleContext{}
+		module, err := loadedModule.Factory(context)
+		if err != nil {
+			panic(err)
+		}
+
+		moduleGateway.AddModule(module)
+	}
 
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(http.Dir("frontend"))) //TODO: Compile frontend into backend
@@ -45,9 +50,9 @@ func main() {
 }
 
 func printLoadedModules() {
-	moduleNames := make([]string, len(moduleindex.Modules))
+	moduleNames := make([]string, len(moduleindex.LoadedModules))
 	i := 0
-	for name := range moduleindex.Modules {
+	for name := range moduleindex.LoadedModules {
 		moduleNames[i] = name
 		i++
 	}

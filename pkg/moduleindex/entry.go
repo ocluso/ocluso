@@ -22,6 +22,6 @@ import (
 )
 
 type ModuleIndexEntry struct {
-	info    moduleinterface.ModuleInfo
-	factory moduleinterface.ModuleFactory
+	Info    moduleinterface.ModuleInfo
+	Factory moduleinterface.ModuleFactory
 }

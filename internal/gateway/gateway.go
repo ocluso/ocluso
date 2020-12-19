@@ -35,7 +35,7 @@ func NewGateway() Gateway {
 
 func (g *Gateway) AddModule(module moduleinterface.Module) {
 	prefix := "/" + module.Name()
-	g.mux.Handle(prefix, http.StripPrefix(prefix, module.NewRequestHandler()))
+	g.mux.Handle(prefix, http.StripPrefix(prefix, module))
 }
 
 func (g *Gateway) ServeHTTP(w http.ResponseWriter, r *http.Request) {
