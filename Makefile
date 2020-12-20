@@ -26,6 +26,14 @@ frontend: build_dirs moduleindex
 moduleindex:
 	go run tools/gen-moduleindex/gen-moduleindex.go
 
+test: test-backend test-frontend
+
+test-backend:
+	go test ./...
+
+test-frontend:
+	echo "Frontend tests not implemented yet"
+
 clean:
 	rm -r build
 

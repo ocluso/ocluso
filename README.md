@@ -14,6 +14,16 @@ To compile and run ocluso, run
 make run
 ```
 
+## Tests
+To run tests for backend and frontend, run
+
+```
+make test
+```
+
+To run backend or frontend tests only, run `make test-backend` or
+`make test-frontend`.
+
 ## Copyright
 ocluso is (C) 2020 The ocluso Authors (see AUTHORS.txt)
 
