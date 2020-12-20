@@ -1,0 +1,24 @@
+{
+  "name": "ocluso",
+  "version": "0.1.0",
+  "description": "A modular management software for clubs",
+  "author": "The ocluso Authors",
+  "license": "AGPL-3.0-or-later",
+  "main": "index.js",
+  "repository": "https://github.com/ocluso/ocluso",
+  "bugs": {
+    "url": "https://github.com/ocluso/ocluso/issues"
+  },
+  "devDependencies": {
+    "rollup": "^2.35.1"
+  },
+  "dependencies": {
+    "mocha": "^8.2.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "mocha": {
+    "spec": "../**/test/**/*.test.js"
+  }
+}
