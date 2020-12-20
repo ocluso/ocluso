@@ -9,6 +9,7 @@
   "bugs": {
     "url": "https://github.com/ocluso/ocluso/issues"
   },
+  "type": "module",
   "devDependencies": {
     "rollup": "^2.35.1"
   },

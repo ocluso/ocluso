@@ -15,8 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-describe('hello2',() => {
-  it('world', () => {
-    console.log("Hello world from frontend test!")
-  })
-})
+export function hello() {
+  console.log("Hello World from fees frontend!")
+}

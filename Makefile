@@ -31,8 +31,8 @@ test: test-backend test-frontend
 test-backend:
 	go test ./...
 
-test-frontend:
-	echo "Frontend tests not implemented yet"
+test-frontend: moduleindex
+	cd frontend && npm test
 
 clean:
 	rm -r build
