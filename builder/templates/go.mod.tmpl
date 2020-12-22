@@ -19,7 +19,6 @@ go 1.15
 
 {{ range .Modules }}
 require github.com/ocluso/ocluso/modules/{{.}}/backend v0.1.0
-require github.com/ocluso/ocluso/modules/{{.}}/modinterface v0.1.0
 replace github.com/ocluso/ocluso/modules/{{.}}/backend v0.1.0 => ../../modules/{{.}}/backend
 replace github.com/ocluso/ocluso/modules/{{.}}/modinterface v0.1.0 => ../../modules/{{.}}/modinterface
 {{ end }}
