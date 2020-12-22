@@ -1,0 +1,12 @@
+{
+  "name": "@ocluso/mod-calendar",
+  "version": "0.1.0",
+  "description": "Frontend components for ocluso's calendar module",
+  "author": "The ocluso Authors",
+  "license": "AGPL-3.0-or-later",
+  "repository": "https://github.com/ocluso/ocluso",
+  "bugs": {
+    "url": "https://github.com/ocluso/ocluso/issues"
+  },
+  "type": "module"
+}

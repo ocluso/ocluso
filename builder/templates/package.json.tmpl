@@ -1,0 +1,9 @@
+{
+  "name": "@ocluso/ocluso",
+  "private": true,
+  "dependencies": {
+    {{ range $index, $module := .Modules }}
+    {{if gt $index 0 }},{{end}}"@ocluso/mod-{{$module}}": "0.1.0"
+    {{ end }}
+  }
+}

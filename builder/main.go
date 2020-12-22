@@ -24,6 +24,7 @@ import (
 	"log"
 	"os"
 	"path"
+	"path/filepath"
 	"text/template"
 )
 
@@ -43,6 +44,7 @@ func main() {
 	createBuildDirectories(sourcetreePath)
 
 	generateGoSource(config, sourcetreePath)
+	generateJSSource(config, sourcetreePath)
 	generateMakefile(config, sourcetreePath)
 }
 
@@ -69,7 +71,7 @@ func createBuildDirectories(sourcetreePath string) {
 
 	subdirectories := []string{"generated"}
 	for _, subdirectory := range subdirectories {
-		err = os.Mkdir(path.Join(buildPath, subdirectory), os.ModePerm)
+		err = os.Mkdir(path.Join(buildPath, subdirectory), permissions)
 		handleError(err)
 	}
 }
@@ -84,6 +86,27 @@ func generateGoSource(config builderConfig, sourcetreePath string) {
 
 	renderTemplate("templates/go.mod.tmpl", path.Join(outputPath, "go.mod"), config)
 	renderTemplate("templates/main.go.tmpl", path.Join(outputPath, "main.go"), config)
+}
+
+func generateJSSource(config builderConfig, sourcetreePath string) {
+	modulesPath := path.Join(sourcetreePath, "modules")
+	outputPath := path.Join(sourcetreePath, "build/generated")
+	npmScopePath := path.Join(outputPath, "node_modules/@ocluso")
+
+	renderTemplate("templates/package.json.tmpl", path.Join(outputPath, "package.json"), config)
+
+	os.MkdirAll(path.Join(npmScopePath), os.FileMode(0775))
+
+	for _, module := range config.Modules {
+		moduleFrontendPath, err := filepath.Abs(path.Join(modulesPath, module, "frontend"))
+		handleError(err)
+
+		npmModulePath, err := filepath.Abs(path.Join(npmScopePath, "mod-"+module))
+		handleError(err)
+
+		err = os.Symlink(moduleFrontendPath, npmModulePath)
+		handleError(err)
+	}
 }
 
 func generateMakefile(config builderConfig, sourcetreePath string) {
