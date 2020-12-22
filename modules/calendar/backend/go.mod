@@ -17,4 +17,4 @@ module github.com/ocluso/ocluso/modules/calendar/backend
 
 go 1.15
 
-require github.com/ocluso/ocluso/modules/calendar/modinterface v0.0.0
+require github.com/ocluso/ocluso/modules/calendar/modinterface v0.1.0

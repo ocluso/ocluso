@@ -18,8 +18,8 @@ module ocluso
 go 1.15
 
 {{ range .Modules }}
-require github.com/ocluso/ocluso/modules/{{.}}/backend v0.0.0
-require github.com/ocluso/ocluso/modules/{{.}}/modinterface v0.0.0
-replace github.com/ocluso/ocluso/modules/{{.}}/backend v0.0.0 => ../../modules/{{.}}/backend
-replace github.com/ocluso/ocluso/modules/{{.}}/modinterface v0.0.0 => ../../modules/{{.}}/modinterface
+require github.com/ocluso/ocluso/modules/{{.}}/backend v0.1.0
+require github.com/ocluso/ocluso/modules/{{.}}/modinterface v0.1.0
+replace github.com/ocluso/ocluso/modules/{{.}}/backend v0.1.0 => ../../modules/{{.}}/backend
+replace github.com/ocluso/ocluso/modules/{{.}}/modinterface v0.1.0 => ../../modules/{{.}}/modinterface
 {{ end }}
