@@ -16,5 +16,3 @@
 module github.com/ocluso/ocluso/modules/accounts/backend
 
 go 1.15
-
-require github.com/ocluso/ocluso/modules/accounts/modinterface v0.1.0

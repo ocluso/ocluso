@@ -17,13 +17,8 @@
 
 package backend
 
-import (
-	"fmt"
-
-	"github.com/ocluso/ocluso/modules/accounts/modinterface"
-)
+import "fmt"
 
 func Hello() {
 	fmt.Println("Hello from accounts!")
-	modinterface.Hello()
 }
