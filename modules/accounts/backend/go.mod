@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-module github.com/ocluso/ocluso/modules/calendar/backend
+module github.com/ocluso/ocluso/modules/accounts/backend
 
 go 1.15
 
-require github.com/ocluso/ocluso/modules/calendar/modinterface v0.1.0
+require github.com/ocluso/ocluso/modules/accounts/modinterface v0.1.0

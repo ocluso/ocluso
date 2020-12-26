@@ -20,5 +20,5 @@ package modinterface
 import "fmt"
 
 func Hello() {
-	fmt.Println("Hello from calendar interface!")
+	fmt.Println("Hello from accounts interface!")
 }

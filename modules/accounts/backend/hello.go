@@ -20,10 +20,10 @@ package backend
 import (
 	"fmt"
 
-	"github.com/ocluso/ocluso/modules/calendar/modinterface"
+	"github.com/ocluso/ocluso/modules/accounts/modinterface"
 )
 
 func Hello() {
-	fmt.Println("Hello from calendar!")
+	fmt.Println("Hello from accounts!")
 	modinterface.Hello()
 }

@@ -20,5 +20,5 @@
 
 # Only allow official modules in source control
 /modules/*
-!/modules/calendar
+!/modules/accounts
 !/modules/members
