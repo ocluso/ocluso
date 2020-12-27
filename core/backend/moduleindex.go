@@ -22,15 +22,15 @@ import (
 	"fmt"
 )
 
-// ModuleIndex is an index of (non-instantiated) Ocluso Modules
+// ModuleIndex is an index of (non-instantiated) ocluso Modules
 //
-// It contains general information about and factory functions for Ocluso
-// Modules that were compiled into the current Ocluso binary
+// It contains general information about and factory functions for ocluso
+// Modules that were compiled into the current ocluso binary
 type ModuleIndex struct {
 	entries map[string]ModuleIndexEntry
 }
 
-// ModuleIndexEntry contains information about an available Ocluso Module
+// ModuleIndexEntry contains information about an available ocluso Module
 type ModuleIndexEntry struct {
 	ModuleJSON    ModuleJSON
 	ModuleFactory ModuleFactory

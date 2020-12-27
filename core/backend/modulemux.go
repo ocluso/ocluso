@@ -19,7 +19,7 @@ package backend
 
 import "net/http"
 
-// ModuleMux is an HTTP multiplexer for Ocluso Modules
+// ModuleMux is an HTTP multiplexer for ocluso Modules
 type ModuleMux struct {
 	mux *http.ServeMux
 }
@@ -29,7 +29,7 @@ type ModuleMux struct {
 // The modules argument is a map with the module name as key and the Module
 // instance as value.
 //
-// Each Ocluso Module has its module name as its own HTTP subpath.
+// Each ocluso Module has its module name as its own HTTP subpath.
 func NewModuleMux(modules *map[string]Module) *ModuleMux {
 	result := ModuleMux{
 		mux: http.NewServeMux(),
