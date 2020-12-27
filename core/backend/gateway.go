@@ -58,7 +58,7 @@ func NewGateway(config *Config, modules *ModuleIndex) (*Gateway, error) {
 }
 
 func (g *Gateway) Run() {
-	moduleMux := NewModuleMux(g.moduleInstances)
+	moduleMux := NewModuleMux(&g.moduleInstances)
 
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(http.Dir("frontend")))
