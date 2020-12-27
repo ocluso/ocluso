@@ -19,19 +19,23 @@ package backend
 
 import "net/http"
 
+// Module is the interface to an instance of an Ocluso Module
 type Module interface {
 	http.Handler
 }
 
+// ModuleContext contains context information for instantiating Ocluso Modules
 type ModuleContext struct {
 	Configuration *Config
 	ModuleIndex   *ModuleIndex
 	//TODO: Database connection
 }
 
+// ModuleJSON represents module.json files with information about Ocluso Modules
 type ModuleJSON struct {
 	Author      string            `json:"author"`
 	DisplayName map[string]string `json:"displayName"`
 }
 
+// ModuleFactory is the interface for functions that instantiate Ocluso Modules
 type ModuleFactory func(context ModuleContext) (Module, error)
