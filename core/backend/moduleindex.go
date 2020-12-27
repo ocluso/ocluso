@@ -17,35 +17,52 @@
 
 package backend
 
+import (
+	"errors"
+	"fmt"
+)
+
+// ModuleIndex is an index of (non-instantiated) Ocluso Modules
+//
+// It contains general information about and factory functions for Ocluso
+// Modules that were compiled into the current Ocluso binary
 type ModuleIndex struct {
-	//TODO
+	entries map[string]ModuleIndexEntry
 }
 
-type ModuleIndexBuilder struct {
-	//TODO
-}
-
+// ModuleIndexEntry contains information about an available Ocluso Module
 type ModuleIndexEntry struct {
-	ModuleJson    ModuleJson
+	ModuleJSON    ModuleJSON
 	ModuleFactory ModuleFactory
 }
 
-func NewModuleIndexBuilder() *ModuleIndexBuilder {
-	return &ModuleIndexBuilder{}
+// NewModuleIndex creates a new module index from the given entries map
+func NewModuleIndex(entries *map[string]ModuleIndexEntry) *ModuleIndex {
+	return &ModuleIndex{entries: *entries}
 }
 
-func (b *ModuleIndexBuilder) AddModule(name string, entry *ModuleIndexEntry) error {
-	panic("Not implemented")
-}
-
-func (b *ModuleIndexBuilder) Build() *ModuleIndex {
-	panic("Not implemented")
-}
-
+// EntryFor returns the entry for a given module name
+//
+// If there is no module with the given name in the index, an error is returned
 func (m *ModuleIndex) EntryFor(moduleName string) (*ModuleIndexEntry, error) {
-	panic("Not implemented")
+	entry, contained := m.entries[moduleName]
+
+	if contained {
+		return &entry, nil
+	}
+
+	return nil, errors.New(fmt.Sprint("No such module:", moduleName))
 }
 
+// LoadedModules returns a list of the names of all modules in the index
 func (m *ModuleIndex) LoadedModules() []string {
-	panic("Not implemented")
+	moduleNames := make([]string, len(m.entries))
+
+	i := 0
+	for moduleName := range m.entries {
+		moduleNames[i] = moduleName
+		i++
+	}
+
+	return moduleNames
 }

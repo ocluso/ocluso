@@ -16,3 +16,5 @@
 module github.com/ocluso/ocluso/core/backend
 
 go 1.15
+
+require github.com/stretchr/testify v1.6.1

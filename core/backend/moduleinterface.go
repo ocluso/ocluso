@@ -29,7 +29,7 @@ type ModuleContext struct {
 	//TODO: Database connection
 }
 
-type ModuleJson struct {
+type ModuleJSON struct {
 	Author      string            `json:"author"`
 	DisplayName map[string]string `json:"displayName"`
 }
