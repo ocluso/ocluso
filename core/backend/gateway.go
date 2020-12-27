@@ -41,7 +41,10 @@ func NewGateway(config *Config, modules *ModuleIndex) (*Gateway, error) {
 			return nil, err
 		}
 
-		context := ModuleContext{}
+		context := ModuleContext{
+			Configuration: config,
+			ModuleIndex:   modules,
+		}
 
 		moduleInstance, err := indexEntry.ModuleFactory(context)
 		if err != nil {

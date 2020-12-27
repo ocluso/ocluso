@@ -24,7 +24,9 @@ type Module interface {
 }
 
 type ModuleContext struct {
-	//TODO
+	Configuration *Config
+	ModuleIndex   *ModuleIndex
+	//TODO: Database connection
 }
 
 type ModuleJson struct {
