@@ -17,16 +17,49 @@
 
 package backend
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 type Gateway struct {
-	//TODO
+	config          *Config
+	moduleIndex     *ModuleIndex
+	moduleInstances map[string]Module
 }
 
 func NewGateway(config *Config, modules *ModuleIndex) (*Gateway, error) {
-	panic("Not implemented")
+	result := Gateway{
+		config:          config,
+		moduleIndex:     modules,
+		moduleInstances: make(map[string]Module, 0),
+	}
+
+	for _, moduleName := range modules.LoadedModules() {
+		indexEntry, err := modules.EntryFor(moduleName)
+		if err != nil {
+			return nil, err
+		}
+
+		context := ModuleContext{}
+
+		moduleInstance, err := indexEntry.ModuleFactory(context)
+		if err != nil {
+			return nil, err
+		}
+
+		result.moduleInstances[moduleName] = moduleInstance
+	}
+
+	return &result, nil
 }
 
-func (g *Gateway) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	panic("Not implemented")
+func (g *Gateway) Run() {
+	moduleMux := NewModuleMux(g.moduleInstances)
+
+	mux := http.NewServeMux()
+	mux.Handle("/", http.FileServer(http.Dir("frontend")))
+	mux.Handle("/api/", http.StripPrefix("/api", moduleMux))
+
+	log.Fatal(http.ListenAndServe(":8080", mux)) //TODO: Make port configurable
 }
