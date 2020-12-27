@@ -13,32 +13,4 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-.PHONY: build backend frontend test
-
-build: backend frontend
-
-run: build
-	cd build/output && ./ocluso
-
-
-backend: build_dir
-	cd build/generated && go build -o ../output/ocluso main.go
-
-frontend:
-	cd build/generated && npm install
-
-
-test:
-	cd core/backend && go test ./...
-	{{ range .Modules }}cd modules/{{.}}/backend && go test ./...
-	{{ end }}
-	cd core/frontend && npm test
-	{{ range .Modules }}cd modules/{{.}}/frontend && npm test
-	{{ end }}
-
-
-build_dir:
-	mkdir -p build/output
-
-clean:
-	rm -r build/output
+node_modules/

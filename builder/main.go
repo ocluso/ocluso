@@ -97,6 +97,15 @@ func generateJSSource(config builderConfig, sourcetreePath string) {
 
 	os.MkdirAll(path.Join(npmScopePath), os.FileMode(0775))
 
+	coreFrontendPath, err := filepath.Abs(path.Join(sourcetreePath, "core/frontend"))
+	handleError(err)
+
+	coreNpmModulePath, err := filepath.Abs(path.Join(npmScopePath, "frontend"))
+	handleError(err)
+
+	err = os.Symlink(coreFrontendPath, coreNpmModulePath)
+	handleError(err)
+
 	for _, module := range config.Modules {
 		moduleFrontendPath, err := filepath.Abs(path.Join(modulesPath, module, "frontend"))
 		handleError(err)
