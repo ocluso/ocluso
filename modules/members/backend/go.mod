@@ -16,3 +16,6 @@
 module github.com/ocluso/ocluso/modules/members/backend
 
 go 1.15
+
+require github.com/ocluso/ocluso/core/backend v0.1.0
+replace github.com/ocluso/ocluso/core/backend v0.1.0 => ../../../core/backend

@@ -17,8 +17,18 @@
 
 package backend
 
-import "fmt"
+import (
+	"net/http"
 
-func Hello() {
-	fmt.Println("Hello from members!")
+	core "github.com/ocluso/ocluso/core/backend"
+)
+
+type MembersModule struct{}
+
+func (m *MembersModule) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
+	responseWriter.Write([]byte("Hello from members!"))
+}
+
+func Instantiate(context core.ModuleContext) (core.Module, error) {
+	return &MembersModule{}, nil
 }

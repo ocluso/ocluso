@@ -17,6 +17,9 @@ module ocluso
 
 go 1.15
 
+require github.com/ocluso/ocluso/core/backend v0.1.0
+replace github.com/ocluso/ocluso/core/backend v0.1.0 => ../../core/backend
+
 {{ range .Modules }}
 require github.com/ocluso/ocluso/modules/{{.}}/backend v0.1.0
 replace github.com/ocluso/ocluso/modules/{{.}}/backend v0.1.0 => ../../modules/{{.}}/backend

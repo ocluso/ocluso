@@ -17,16 +17,29 @@
 
 package main
 
-import "fmt"
+import(
+    "log"
+    core "github.com/ocluso/ocluso/core/backend"
+)
 
-{{ range .Modules }}
-import mod{{.}} "github.com/ocluso/ocluso/modules/{{.}}/backend"
+{{ range .Modules }}import oclusomod{{.}} "github.com/ocluso/ocluso/modules/{{.}}/backend"
 {{ end }}
 
 func main() {
-    fmt.Println("Hello World from ocluso main!")
+    config := core.Config{} //TODO: Load Configuration
+    moduleIndex := BuildModuleIndex()
 
-    {{ range .Modules }}
-    mod{{.}}.Hello()
-    {{ end }}
+    gateway, err := core.NewGateway(&config, moduleIndex)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    gateway.Run()
+}
+
+func BuildModuleIndex() *core.ModuleIndex {
+    return core.NewModuleIndex(&map[string]core.ModuleIndexEntry{
+        {{ range .Modules }}"{{.}}": core.ModuleIndexEntry{/*TODO: module.json*/ ModuleFactory: oclusomod{{.}}.Instantiate},
+        {{ end }}
+    })
 }
