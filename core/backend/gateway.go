@@ -62,7 +62,7 @@ func (g *Gateway) Run() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/", http.RedirectHandler("/app/", 301))
-	mux.Handle("/app/", http.FileServer(http.Dir("frontend")))
+	mux.Handle("/app/", http.StripPrefix("/app", http.FileServer(http.Dir("frontend"))))
 	mux.Handle("/api/", http.StripPrefix("/api", moduleMux))
 	mux.Handle("/api", http.StripPrefix("/api", moduleMux))
 
