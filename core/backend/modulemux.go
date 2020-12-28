@@ -35,14 +35,21 @@ func NewModuleMux(modules *map[string]Module) *ModuleMux {
 		mux: http.NewServeMux(),
 	}
 
+	result.mux.Handle("/", http.NotFoundHandler())
+
 	for moduleName, module := range *modules {
-		prefix := "/" + moduleName + "/"
+		prefix := "/" + moduleName
 		result.mux.Handle(prefix, http.StripPrefix(prefix, module))
+		result.mux.Handle(prefix+"/", http.StripPrefix(prefix, module))
 	}
 
 	return &result
 }
 
 func (m *ModuleMux) ServeHTTP(responseWriter http.ResponseWriter, request *http.Request) {
-	m.mux.ServeHTTP(responseWriter, request)
+	if request.URL.Path == "" {
+		http.NotFound(responseWriter, request)
+	} else {
+		m.mux.ServeHTTP(responseWriter, request)
+	}
 }

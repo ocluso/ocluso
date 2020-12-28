@@ -61,8 +61,10 @@ func (g *Gateway) Run() {
 	moduleMux := NewModuleMux(&g.moduleInstances)
 
 	mux := http.NewServeMux()
-	mux.Handle("/", http.FileServer(http.Dir("frontend")))
+	mux.Handle("/", http.RedirectHandler("/app/", 301))
+	mux.Handle("/app/", http.FileServer(http.Dir("frontend")))
 	mux.Handle("/api/", http.StripPrefix("/api", moduleMux))
+	mux.Handle("/api", http.StripPrefix("/api", moduleMux))
 
 	log.Fatal(http.ListenAndServe(":8080", mux)) //TODO: Make port configurable
 }

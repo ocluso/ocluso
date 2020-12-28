@@ -105,5 +105,5 @@ func TestRouteYields404(t *testing.T) {
 }
 
 func TestPrefixIsStripped(t *testing.T) {
-	testRouteYieldsBody(t, "bar/baz", "baz")
+	testRouteYieldsBody(t, "bar/baz", "/baz")
 }
