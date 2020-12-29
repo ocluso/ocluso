@@ -25,7 +25,7 @@ backend: build_dir
 	cd build/generated && go build -o ../output/ocluso main.go
 
 frontend:
-	cd build/generated && npm install
+	cd build/generated && npm run build
 
 
 test:
@@ -38,7 +38,7 @@ test:
 
 
 build_dir:
-	mkdir -p build/output
+	mkdir -p build/output/frontend
 
 clean:
 	rm -r build/output

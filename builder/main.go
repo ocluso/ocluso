@@ -23,6 +23,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"text/template"
@@ -46,6 +47,8 @@ func main() {
 	generateGoSource(config, sourcetreePath)
 	generateJSSource(config, sourcetreePath)
 	generateMakefile(config, sourcetreePath)
+
+	installJSDependencies(sourcetreePath)
 }
 
 func handleError(e error) {
@@ -93,14 +96,17 @@ func generateJSSource(config builderConfig, sourcetreePath string) {
 	outputPath := path.Join(sourcetreePath, "build/generated")
 	npmScopePath := path.Join(outputPath, "node_modules/@ocluso")
 
-	renderTemplate("templates/package.json.tmpl", path.Join(outputPath, "package.json"), config)
+	jsSourcefiles := []string{"package.json", "index.html", "ocluso.js", "rollup.config.js"}
+	for _, filename := range jsSourcefiles {
+		renderTemplate("templates/"+filename+".tmpl", path.Join(outputPath, filename), config)
+	}
 
 	os.MkdirAll(path.Join(npmScopePath), os.FileMode(0775))
 
 	coreFrontendPath, err := filepath.Abs(path.Join(sourcetreePath, "core/frontend"))
 	handleError(err)
 
-	coreNpmModulePath, err := filepath.Abs(path.Join(npmScopePath, "frontend"))
+	coreNpmModulePath, err := filepath.Abs(path.Join(npmScopePath, "core"))
 	handleError(err)
 
 	err = os.Symlink(coreFrontendPath, coreNpmModulePath)
@@ -120,6 +126,15 @@ func generateJSSource(config builderConfig, sourcetreePath string) {
 
 func generateMakefile(config builderConfig, sourcetreePath string) {
 	renderTemplate("templates/Makefile.tmpl", path.Join(sourcetreePath, "Makefile"), config)
+}
+
+func installJSDependencies(sourcetreePath string) {
+	cmd := exec.Command("npm", "install")
+	cmd.Dir = path.Join(sourcetreePath, "build/generated")
+
+	output, err := cmd.CombinedOutput()
+	fmt.Printf("npm install output:\n\n%s\n", output)
+	handleError(err)
 }
 
 func readConfig(sourcetreePath string) builderConfig {
