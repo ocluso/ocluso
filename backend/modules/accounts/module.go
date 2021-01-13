@@ -20,10 +20,20 @@ package accounts
 import (
 	"database/sql"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func BuildHandler(db *sql.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World from accounts"))
+	router := mux.NewRouter()
+
+	router.HandleFunc("/foo", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello World from accounts/foo"))
 	})
+
+	router.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello World from accounts/bar"))
+	})
+
+	return router
 }
