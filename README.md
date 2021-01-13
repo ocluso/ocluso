@@ -1,8 +1,8 @@
 # ![ocluso](readme-logo.svg)
-A modular management software for clubs
+A flexible management software for clubs
 
 ## Copyright
-ocluso is (C) 2020 The ocluso Authors (see AUTHORS.txt)
+ocluso is (C) 2020-2021 The ocluso Authors (see AUTHORS.txt)
 
 It is licensed under the GNU Affero General Public License Version 3.
 For details, please refer to the [LICENSE.txt](./LICENSE.txt) file.
