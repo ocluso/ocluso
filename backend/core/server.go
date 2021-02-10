@@ -33,29 +33,25 @@ type Server struct {
 	db           *sql.DB
 	httpListener *net.Listener
 	httpServer   *http.Server
+	router       *mux.Router
 }
+
+// ServerContextKey is a key that can be used on a http.Request to retrieve context variables related to a Server
+type ServerContextKey uint
 
 // NewServer creates a new ocluso backend server that conforms to the given configuration
 //
 // The database connection will be established during this call
 func NewServer(config Config) (*Server, error) {
-	listener, err := net.Listen("tcp", config.HTTPListenAddress)
+	server, err := initServer(&config)
 	if err != nil {
 		return nil, err
 	}
 
-	db, err := sql.Open("postgres", config.PostgresDSN)
-	if err != nil {
-		return nil, err
-	}
+	addHandlersForModule(server.router, "accounts", accounts.BuildHandler(server.db))
+	addHandlersForModule(server.router, "members", members.BuildHandler(server.db))
 
-	server := http.Server{}
-	router := mux.NewRouter()
-	addHandlersForModule(router, "accounts", accounts.BuildHandler(db))
-	addHandlersForModule(router, "members", members.BuildHandler(db))
-	server.Handler = router
-
-	return &Server{db: db, httpListener: &listener, httpServer: &server}, nil
+	return server, nil
 }
 
 // Serve runs the ocluso backend server in the current goroutine
@@ -72,13 +68,37 @@ func (s *Server) Shutdown() error {
 	return s.httpServer.Shutdown(context.Background())
 }
 
-func buildPathPrefix(moduleName string) string {
-	return "/api/v0/" + moduleName
-}
-
 func addHandlersForModule(router *mux.Router, moduleName string, handler http.Handler) {
 	prefix := buildPathPrefix(moduleName)
 
 	router.Path(prefix).Handler(http.StripPrefix(prefix, handler))
 	router.PathPrefix(prefix + "/").Handler(http.StripPrefix(prefix, handler))
+}
+
+func buildPathPrefix(moduleName string) string {
+	return "/api/v0/" + moduleName
+}
+
+func initServer(config *Config) (*Server, error) {
+	listener, err := net.Listen("tcp", config.HTTPListenAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	db, err := sql.Open("postgres", config.PostgresDSN)
+	if err != nil {
+		return nil, err
+	}
+
+	httpServer := http.Server{}
+	router := mux.NewRouter()
+	httpServer.Handler = router
+
+	server := Server{db: db, httpListener: &listener, httpServer: &httpServer, router: router}
+
+	return &server, nil
+}
+
+func requestWithContextValue(r *http.Request, key interface{}, value interface{}) *http.Request {
+	return r.WithContext(context.WithValue(r.Context(), key, value))
 }
