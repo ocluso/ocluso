@@ -50,7 +50,7 @@ func NewServer(config Config) (*Server, error) {
 		return nil, err
 	}
 
-	// TODO: Add authentication token middleware
+	server.router.Use(accounts.BuildAuthenticationMiddleware(server.tokenAuthority))
 
 	addHandlersForModule(server.router, "accounts", accounts.BuildHandler(server.db, server.tokenAuthority))
 	addHandlersForModule(server.router, "members", members.BuildHandler(server.db))
