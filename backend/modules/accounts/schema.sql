@@ -15,7 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-CREATE TYPE Permission AS ENUM ();
+CREATE TYPE Permission AS (
+    moduleName VARCHAR(64)
+    permissionName VARCHAR(32)
+);
 
 
 CREATE TABLE Accounts (

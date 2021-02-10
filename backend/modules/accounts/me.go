@@ -19,18 +19,13 @@ package accounts
 
 import (
 	"database/sql"
-	"github.com/lhinderberger/KISStokens"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
-func BuildHandler(db *sql.DB, tokenAuthority *KISStokens.TokenAuthority) http.Handler {
-	router := mux.NewRouter()
+func buildMeHandler(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello World from accounts/me"))
 
-	router.HandleFunc("/login", buildLoginHandler(db, tokenAuthority))
-	router.HandleFunc("/logout", buildLogoutHandler())
-	router.HandleFunc("/me", buildMeHandler(db))
-
-	return router
+		//TODO: Return information about the currently logged in user, if any
+	})
 }

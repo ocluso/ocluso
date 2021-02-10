@@ -21,16 +21,24 @@ import (
 	"database/sql"
 	"github.com/lhinderberger/KISStokens"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
-func BuildHandler(db *sql.DB, tokenAuthority *KISStokens.TokenAuthority) http.Handler {
-	router := mux.NewRouter()
+func buildLoginHandler(db *sql.DB, tokenAuthority *KISStokens.TokenAuthority) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello World from accounts/login"))
 
-	router.HandleFunc("/login", buildLoginHandler(db, tokenAuthority))
-	router.HandleFunc("/logout", buildLogoutHandler())
-	router.HandleFunc("/me", buildMeHandler(db))
+		//TODO: Look up submitted user
+		//TODO: Check submitted password
+		//TODO: Issue authentication token, if password is correct
+		//TODO: Send that token using secure cookie
+		//TODO: Send CSRF token as header
+	})
+}
 
-	return router
+func buildLogoutHandler() http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello World from accounts/logout"))
+
+		//TODO: Invalidate authentication cookie, if any
+	})
 }

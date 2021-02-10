@@ -24,16 +24,18 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/lhinderberger/KISStokens"
 	"github.com/ocluso/ocluso/backend/modules/accounts"
 	"github.com/ocluso/ocluso/backend/modules/members"
 )
 
 // Server serves the ocluso backend
 type Server struct {
-	db           *sql.DB
-	httpListener *net.Listener
-	httpServer   *http.Server
-	router       *mux.Router
+	db             *sql.DB
+	httpListener   *net.Listener
+	httpServer     *http.Server
+	router         *mux.Router
+	tokenAuthority *KISStokens.TokenAuthority
 }
 
 // ServerContextKey is a key that can be used on a http.Request to retrieve context variables related to a Server
@@ -48,7 +50,9 @@ func NewServer(config Config) (*Server, error) {
 		return nil, err
 	}
 
-	addHandlersForModule(server.router, "accounts", accounts.BuildHandler(server.db))
+	// TODO: Add authentication token middleware
+
+	addHandlersForModule(server.router, "accounts", accounts.BuildHandler(server.db, server.tokenAuthority))
 	addHandlersForModule(server.router, "members", members.BuildHandler(server.db))
 
 	return server, nil
@@ -90,15 +94,16 @@ func initServer(config *Config) (*Server, error) {
 		return nil, err
 	}
 
+	tokenAuthority, err := KISStokens.NewTokenAuthority(config.AuthTokenHMACSecret, config.AuthTokenLifetime)
+	if err != nil {
+		return nil, err
+	}
+
 	httpServer := http.Server{}
 	router := mux.NewRouter()
 	httpServer.Handler = router
 
-	server := Server{db: db, httpListener: &listener, httpServer: &httpServer, router: router}
+	server := Server{db: db, httpListener: &listener, httpServer: &httpServer, router: router, tokenAuthority: tokenAuthority}
 
 	return &server, nil
-}
-
-func requestWithContextValue(r *http.Request, key interface{}, value interface{}) *http.Request {
-	return r.WithContext(context.WithValue(r.Context(), key, value))
 }

@@ -20,10 +20,18 @@ package core
 import (
 	"encoding/json"
 	"io/ioutil"
+	"time"
 )
 
 // Config contains the configuration needed to run the ocluso backend
 type Config struct {
+	// The secret key for signing authentication tokens
+	AuthTokenHMACSecret []byte `json:"authTokenHMACSecret"`
+
+	// The lifetime that authentication tokens have, before they need to be renewed
+	// TODO: Set a reasonable default
+	AuthTokenLifetime time.Duration `json:"authTokenLifetime"`
+
 	// The address that the HTTP server shall listen on
 	HTTPListenAddress string `json:"httpListenAddress"`
 
