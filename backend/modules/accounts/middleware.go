@@ -23,7 +23,7 @@ import (
 )
 
 // BuildAuthenticationMiddleware builds a middleware for mux.Router that checks for authentication tokens,
-// verifies them and, rejects the request if invalid and otherwise injects the decoded values of the
+// verifies them, rejects the request if invalid and otherwise injects the decoded values of the
 // authentication token into the request's context.
 func BuildAuthenticationMiddleware(tokenAuthority *KISStokens.TokenAuthority) mux.MiddlewareFunc {
 	panic("Not implemented")
