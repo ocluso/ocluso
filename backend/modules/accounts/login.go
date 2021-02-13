@@ -23,6 +23,12 @@ import (
 	"net/http"
 )
 
+const AuthTokenCookieName = "authToken"
+const CSRFClaimName = "csrf"
+const CSRFHeaderName = "X-CSRF-Token"
+
+const passwordHashQuery = "SELECT Accounts.passwordHash FROM Accounts JOIN Members on Members.memberUUID = Accounts.memberUUID WHERE Members.email = ?"
+
 func buildLoginHandler(db *sql.DB, tokenAuthority *KISStokens.TokenAuthority) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Hello World from accounts/login"))
