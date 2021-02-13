@@ -24,6 +24,10 @@ func TestValidAuthTokenInjectsContext(t *testing.T) {
 	t.Fatal("Not implemented")
 }
 
+func TestInjectAuthenticationInjectsContext(t *testing.T) {
+	t.Fatal("Not implemented")
+}
+
 func TestInvalidAuthTokenYields401(t *testing.T) {
 	t.Fatal("Not implemented")
 }

@@ -20,6 +20,7 @@ package accounts
 import (
 	"github.com/gorilla/mux"
 	"github.com/lhinderberger/KISStokens"
+	"net/http"
 )
 
 // BuildAuthenticationMiddleware builds a middleware for mux.Router that checks for authentication tokens,
@@ -27,4 +28,13 @@ import (
 // authentication token into the request's context.
 func BuildAuthenticationMiddleware(tokenAuthority *KISStokens.TokenAuthority) mux.MiddlewareFunc {
 	panic("Not implemented")
+}
+
+// InjectAuthentication injects a given authentication context when handling a HTTP request
+// This function is intended for testing purposes
+func InjectAuthentication(email string, inner http.Handler) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		panic("Not implemented") //TODO
+		inner.ServeHTTP(w, r)
+	})
 }
