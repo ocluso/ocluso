@@ -27,7 +27,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 	"time"
 )
@@ -84,19 +83,18 @@ func buildLoginTestMockDatabase() (*sql.DB, *sqlmock.Sqlmock) {
 	return db, &dbMock
 }
 
-func buildGenericLoginTestRequest(body string) *http.Request {
-	return httptest.NewRequest("POST", "/accounts/login", strings.NewReader(body))
-}
-
 func buildLoginTestRequest(email string, password string) *http.Request {
 	authHeaderPayload := fmt.Sprintf("%s:%s", email, password)
-	body := "Authorization: Basic " + base64.StdEncoding.EncodeToString([]byte(authHeaderPayload))
-	return buildGenericLoginTestRequest(body)
+	request := httptest.NewRequest("POST", "/accounts/login", nil)
+	request.Header.Set("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(authHeaderPayload)))
+	return request
 }
 
 func buildLoginTestRenewRequest(authTokenCookie *http.Cookie, csrfToken string) *http.Request {
-	body := fmt.Sprintf("Cookie: %s=%s\n%s: %s", authTokenCookie.Name, authTokenCookie.Value, CSRFHeaderName, csrfToken)
-	return buildGenericLoginTestRequest(body)
+	request := httptest.NewRequest("POST", "/accounts/login", nil)
+	request.AddCookie(authTokenCookie)
+	request.Header.Set(CSRFHeaderName, csrfToken)
+	return request
 }
 
 func buildLogoutTestRequest() *http.Request {
@@ -139,6 +137,10 @@ func TestLoginWithValidTokenRenewsToken(t *testing.T) {
 	authTokenCookie := testutils.ExtractCookieFromResponse(response, AuthTokenCookieName)
 	csrfHeader := response.Header.Get(CSRFHeaderName)
 
+	if !assert.NotNil(t, authTokenCookie) {
+		t.Fatal("Cannot complete test")
+	}
+
 	time.Sleep(time.Second)
 
 	request = buildLoginTestRenewRequest(authTokenCookie, csrfHeader)
@@ -150,6 +152,10 @@ func TestLoginWithValidTokenRenewsToken(t *testing.T) {
 
 	authTokenCookie2 := testutils.ExtractCookieFromResponse(response, AuthTokenCookieName)
 	csrfHeader2 := response.Header.Get(CSRFHeaderName)
+
+	if !assert.NotNil(t, authTokenCookie2) {
+		t.Fatal("Cannot complete test")
+	}
 
 	assertAuthTokenIsValid(t, tokenAuthority, authTokenCookie2, csrfHeader2)
 

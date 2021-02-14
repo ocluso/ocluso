@@ -26,19 +26,21 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 	"time"
 )
 
 func buildMiddlewareTestRequest(target string, authToken string, csrfToken string) *http.Request {
-	body := fmt.Sprintf("Cookie: %s=%s\n%s: %s", AuthTokenCookieName, authToken, CSRFHeaderName, csrfToken)
-	return httptest.NewRequest("POST", target, strings.NewReader(body))
+	request := httptest.NewRequest("POST", target, nil)
+	request.AddCookie(&http.Cookie{Name: AuthTokenCookieName, Value: authToken})
+	request.Header.Set(CSRFHeaderName, csrfToken)
+	return request
 }
 
 func buildMiddlewareTestRequestNoCSRF(target string, authToken string) *http.Request {
-	body := fmt.Sprintf("Cookie: %s=%s", AuthTokenCookieName, authToken)
-	return httptest.NewRequest("POST", target, strings.NewReader(body))
+	request := httptest.NewRequest("POST", target, nil)
+	request.AddCookie(&http.Cookie{Name: AuthTokenCookieName, Value: authToken})
+	return request
 }
 
 func buildMiddlewareTestRouter(tokenAuthority *KISStokens.TokenAuthority) *mux.Router {
@@ -60,6 +62,8 @@ func requireUserAuthenticatedHandler(w http.ResponseWriter, r *http.Request) {
 	userUUID, ok := RequireUserAuthenticated(w, r)
 	if ok {
 		w.Write([]byte(userUUID))
+	} else if userUUID != "" {
+		panic(fmt.Sprint("Invalid return value:", userUUID))
 	}
 }
 
@@ -81,7 +85,7 @@ func TestValidAuthTokenInjectsContext(t *testing.T) {
 	request := buildMiddlewareTestRequest("/requireUserAuthenticated", authToken, csrfToken)
 	response := testutils.RecordResponse(router, request)
 
-	if assert.Equal(t, http.StatusOK, response.Status) {
+	if assert.Equal(t, http.StatusOK, response.StatusCode) {
 		actualUserUUID, err := ioutil.ReadAll(response.Body)
 		if assert.NoError(t, err) {
 			assert.Equal(t, expectedUserUUID, string(actualUserUUID))
@@ -91,12 +95,12 @@ func TestValidAuthTokenInjectsContext(t *testing.T) {
 
 func TestInjectAuthenticationInjectsContext(t *testing.T) {
 	expectedUserUUID := "735fa28e-3cb0-4a73-ab8b-a0dda7402151"
-	handler := InjectAuthentication(expectedUserUUID, http.HandlerFunc(requireUserAuthenticatedHandler))
+	handler := InjectAuthenticationHandler(expectedUserUUID, http.HandlerFunc(requireUserAuthenticatedHandler))
 
 	request := httptest.NewRequest("POST", "/requireUserAuthenticated", nil)
 	response := testutils.RecordResponse(handler, request)
 
-	if assert.Equal(t, http.StatusOK, response.Status) {
+	if assert.Equal(t, http.StatusOK, response.StatusCode) {
 		actualUserUUID, err := ioutil.ReadAll(response.Body)
 		if assert.NoError(t, err) {
 			assert.Equal(t, expectedUserUUID, string(actualUserUUID))
@@ -124,7 +128,7 @@ func TestInvalidAuthTokenYields401(t *testing.T) {
 	request := buildMiddlewareTestRequest("/requireUserAuthenticated", authToken, csrfToken)
 	response := testutils.RecordResponse(router, request)
 
-	assert.Equal(t, http.StatusUnauthorized, response.Status)
+	assert.Equal(t, http.StatusUnauthorized, response.StatusCode)
 }
 
 func TestMissingCSRFYields401(t *testing.T) {
@@ -144,7 +148,7 @@ func TestMissingCSRFYields401(t *testing.T) {
 	request := buildMiddlewareTestRequestNoCSRF("/requireUserAuthenticated", authToken)
 	response := testutils.RecordResponse(router, request)
 
-	assert.Equal(t, http.StatusUnauthorized, response.Status)
+	assert.Equal(t, http.StatusUnauthorized, response.StatusCode)
 }
 
 func TestInvalidCSRFYields401(t *testing.T) {
@@ -164,7 +168,7 @@ func TestInvalidCSRFYields401(t *testing.T) {
 	request := buildMiddlewareTestRequest("/requireUserAuthenticated", authToken, "foo")
 	response := testutils.RecordResponse(router, request)
 
-	assert.Equal(t, http.StatusUnauthorized, response.Status)
+	assert.Equal(t, http.StatusUnauthorized, response.StatusCode)
 }
 
 func TestNoAuthTokenIsANop(t *testing.T) {
@@ -174,7 +178,7 @@ func TestNoAuthTokenIsANop(t *testing.T) {
 	request := httptest.NewRequest("POST", "/foo", nil)
 	response := testutils.RecordResponse(router, request)
 
-	if assert.Equal(t, http.StatusOK, response.Status) {
+	if assert.Equal(t, http.StatusOK, response.StatusCode) {
 		actualFoo, err := ioutil.ReadAll(response.Body)
 		if assert.NoError(t, err) {
 			assert.Equal(t, "foo", string(actualFoo))
