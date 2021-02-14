@@ -28,7 +28,7 @@ const CSRFClaimName = "csrf"
 const CSRFHeaderName = "X-CSRF-Token"
 const UserUUIDClaimName = "user"
 
-const loginQuery = "SELECT Accounts.memberUUID, Accounts.passwordHash FROM Accounts JOIN Members on Members.memberUUID = Accounts.memberUUID WHERE Members.email = ?"
+const loginQuery = "SELECT Accounts.memberUUID, Accounts.passwordHash FROM Accounts JOIN Members on Members.uuid = Accounts.memberUUID WHERE Members.email = ?"
 
 func buildLoginHandler(db *sql.DB, tokenAuthority *KISStokens.TokenAuthority) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
