@@ -32,6 +32,7 @@ import (
 	"time"
 )
 
+const loginTestUUID = "6d4ea271-97e1-42f6-9187-ae28ce5a4cd0"
 const loginTestUsername = "example@ocluso.de"
 
 func assertAuthTokenIsValid(t *testing.T, tokenAuthority *KISStokens.TokenAuthority, authTokenCookie *http.Cookie, csrfHeader string) {
@@ -46,6 +47,11 @@ func assertAuthTokenIsValid(t *testing.T, tokenAuthority *KISStokens.TokenAuthor
 		csrfTokenField, ok := decodedToken.Claims[CSRFClaimName]
 		if assert.True(t, ok) {
 			assert.Equal(t, csrfHeader, csrfTokenField)
+		}
+
+		userUUIDField, ok := decodedToken.Claims[UserUUIDClaimName]
+		if assert.True(t, ok) {
+			assert.Equal(t, loginTestUUID, userUUIDField)
 		}
 
 		assert.Equal(t, decodedToken.Header.Limits.ExpirationTime, authTokenCookie.Expires)
@@ -70,10 +76,10 @@ func buildLoginTestMockDatabase() (*sql.DB, *sqlmock.Sqlmock) {
 	}
 
 	rows := sqlmock.
-		NewRows([]string{"Accounts.passwordHash"}).
-		AddRow("d1dc6e1dec083a369fe747aba354daa20430e941c663590f6b628daf68685ed7e4692583b68b66a16a052ac4acd30710b976a84b4b14dd404ac7b17f84e56a2d")
+		NewRows([]string{"Accounts.memberUUID", "Accounts.passwordHash"}).
+		AddRow(loginTestUUID, "d1dc6e1dec083a369fe747aba354daa20430e941c663590f6b628daf68685ed7e4692583b68b66a16a052ac4acd30710b976a84b4b14dd404ac7b17f84e56a2d")
 
-	dbMock.ExpectQuery(passwordHashQuery).WithArgs(loginTestUsername).WillReturnRows(rows)
+	dbMock.ExpectQuery(loginQuery).WithArgs(loginTestUsername).WillReturnRows(rows)
 
 	return db, &dbMock
 }
