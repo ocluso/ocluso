@@ -30,7 +30,6 @@ func BuildHandler(db *sql.DB, tokenAuthority *KISStokens.TokenAuthority) http.Ha
 
 	router.HandleFunc("/login", buildLoginHandler(db, tokenAuthority))
 	router.HandleFunc("/logout", buildLogoutHandler())
-	router.HandleFunc("/me", buildMeHandler(db))
 
 	return router
 }
